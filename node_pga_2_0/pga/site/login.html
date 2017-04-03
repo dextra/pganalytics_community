@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html ng-app="pganalytics">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="bower_components/angular/angular.js"></script>
+
+	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+	<link rel="stylesheet/less" type="text/css" href="css/login.less" />
+	<script src="bower_components/less/dist/less.js"></script>
+
+	<title>pgAnalytics - Login</title>
+	<link rel="shortcut icon" href="/pga/favicon.ico" />
+
+	<!-- Controllers -->
+	<script src="js/utils.js"></script>
+	<script src="js/controllers/loginController.js"></script>
+
+	<!-- Google Analytics -->
+	<script src="//www.google-analytics.com/analytics.js"></script>
+
+
+</head>
+<body ng-controller="LoginCtrl" ng-init="init()">
+	<div class="componente-login">
+		<div class="alert alert-danger" role="alert" ng-if="errmsg">
+			<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+			<span class="sr-only">Erro:</span>
+			{{errmsg}}
+		</div>
+		<div class="alert alert-info" role="alert" ng-if="infomsg">
+			<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+			{{infomsg}}
+		</div>
+		<div class="logo">
+			<img src="img/logo_pga.png" alt="pganalytics" id="logo">
+		</div>
+		<form role="form" class="centralizador-componente"name="login" id="login" action="/pga/s/auth/login" method="POST">
+			<div class="areaLogin">
+				<h3>Login</h3>
+				<div class="form-group form-login">
+					<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+					<label for="_fuser">Usuário</label>
+					<input class="form-control" id="_fuser"  name="_fuser" type="text" placeholder="Usuário" autocomplete="off">
+				</div>
+				<div class="form-group">
+					<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+					<label for="_fpass">Senha</label>
+					<i data-toggle="modal" data-target="#password-troubleshooting"><small><a>esqueceu sua senha?</a></small></i>
+					<input class="form-control" id="_fpass" name="_fpass" type="password" placeholder="Senha" autocomplete="off">
+				</div>
+				<button type="submit" class="btn btn-primary btn-login">Acessar</button>
+			</div>
+		</form>
+	</div>
+
+	<div class="modal" id="password-troubleshooting" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title">Problemas com minha senha</h3>
+				</div>
+
+				<form role="form" action="/pga/s/auth/resettoken" method="POST">
+					<div class="modal-body">
+						<p>Caso tenha esquecido sua senha, por favor informe abaixo seu nome de usuário e clique em "Reiniciar senha". Será enviado um e-mail com instruções sobre como gerar uma nova senha.</p>
+							<div class="pull-right col-md-8">
+								<div class="form-group form-login">
+									<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+									<label for="_fuser">Nome de usuário:</label>
+									<input class="form-control" id="_fuser"  name="_fuser" type="text" placeholder="Usuário" autocomplete="off">
+								</div>
+							</div>
+							<div class="clearfix"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+						<button type="submit" class="btn btn-primary">Reiniciar senha</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+  ga('create', 'UA-44518307-3', 'auto'); /* para a conta do site "secure.pganalytics.com.br" */
+  ga('send', 'pageview');
+  if (location.host != 'sistemas.pganalytics.com.br') {
+    $('#_fuser').val('demo');
+    $('#_fpass').val('demo');
+  }
+</script>
+</html>
+

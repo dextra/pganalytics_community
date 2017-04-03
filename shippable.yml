@@ -1,0 +1,29 @@
+language: node_js
+
+node_js:
+  - 0.10
+
+addons:
+  - firefox: "23.0"
+
+before_install:
+  - sudo apt-get install -y build-essential zlib1g-dev libpcre3-dev cmake flex
+  - make pginstallmaster
+
+install:
+  - make coletor-build
+  - make node-install
+
+before_script:
+  - export DISPLAY=:99.0
+  - /etc/init.d/xvfb start
+  - mkdir -p ./shippable/testresults/
+  - mkdir -p ./shippable/codecoverage/
+
+script:
+  - make test
+
+after_script:
+  - mv -v ./node_pga_2_0/pga/test/out/testresults/*.xml ./shippable/testresults/
+  - find ./node_pga_2_0/pga/test/out/codecoverage/ -name \*.xml -exec mv -v {} ./shippable/codecoverage/ \;
+

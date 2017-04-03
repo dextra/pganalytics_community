@@ -1,0 +1,52 @@
+/* Hacks and customization of Sideshow library */
+
+/*.sideshow-mask-corner-part, .sideshow-mask-part, .sideshow-subject-mask {background-color:#f0f0f0;opacity:0.85;}*/
+
+.sideshow-step-description {
+	/* Fix cursor changes caused by draggable */
+	> * {cursor: text;}
+	> a, > button {cursor: pointer;}
+
+	/* Our customizations over Sideshow */
+	.close {color:#fff;}
+	.sideshow-step-text hr {
+		margin: 0;
+	}
+	.sideshow-previous-step-button {
+		float: left;
+		margin-top: 12px;
+		.make-fa-icon(@fa-var-caret-left);
+	}
+}
+
+/*** Fix some elements in the site to look better when "subjected" ***/
+
+/* Just make a padding for Sideshow */
+#select-charts-dropdown, #periodo {padding: 5px; margin: -5px;}
+
+
+.modal, .dropdown-menu {
+	z-index: 90000; /* hack needed to display the element over Sideshow */
+}
+
+.datepicker-row {
+	.clearfix;
+}
+
+.sideshow-mask-part,.sideshow-subject-mask {
+	opacity: .5
+}
+.sideshow-details-panel h2 {
+	text-transform: none;
+	font-weight: 700;
+	font-size: 2em;
+}
+.sideshow-step-text {
+	font-size: 1.5em;
+}
+
+.sideshow-step-description {
+	box-shadow: 0px 0px 15px 5px #000;
+	border-radius: 8px;
+}
+

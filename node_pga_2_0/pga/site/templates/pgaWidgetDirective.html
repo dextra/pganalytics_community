@@ -1,0 +1,8 @@
+<div class="pga-widget" ng-switch="widget.type">
+	<pga-chart data="data" options="options" widget="widget" i18n-object="i18n" api="api" ng-switch-when="stackedAreaChart"></pga-chart>
+	<pga-chart data="data" options="options" widget="widget" i18n-object="i18n" api="api" ng-switch-when="lineChart"></pga-chart>
+	<pga-table data="data" options="options" widget="widget" i18n-object="i18n" api="api" ng-switch-when="dataTable"></pga-table>
+	<pga-gauge data="data" options="options" widget="widget" i18n-object="i18n" api="api" ng-switch-when="gauge"></pga-gauge>
+	<div ng-switch-default>???</div>
+</div>
+

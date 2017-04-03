@@ -1,0 +1,11 @@
+{
+  "name": "pagedown",
+  "_cacheHeaders": {
+    "Content-Type": "application/x-compressed",
+    "Content-Disposition": "attachment; filename=\"pagedown-2a8c75ce3fb5.zip\""
+  },
+  "main": "index.zip",
+  "_source": "http://pagedown.googlecode.com/archive/2a8c75ce3fb50b88165efae9d48a8bc87dc4fb2b.zip",
+  "_target": "*",
+  "_originalSource": "http://pagedown.googlecode.com/archive/2a8c75ce3fb50b88165efae9d48a8bc87dc4fb2b.zip"
+}

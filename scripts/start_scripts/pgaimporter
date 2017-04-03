@@ -1,0 +1,102 @@
+#!/bin/bash
+#
+# PgAnalytics Importer Manager 
+#
+# chkconfig: 345 99 20
+#
+# description: PgAnalytics Importer Manager
+# processname: pgaimporter
+#
+### BEGIN INIT INFO
+# Provides:          pgaimporter
+# Required-Start: $local_fs $remote_fs $postgresql
+# Required-Stop: $local_fs $remote_fs
+# Should-Start: $network
+# Should-Stop: $network
+# Default-Start:        2 3 4 5
+# Default-Stop:         0 1 6
+# Short-Description: PgAnalytics Importer Manager
+# Description: PgAnalytics Importer Manager
+### END INIT INFO
+
+# Source function library.
+. /etc/init.d/functions
+
+PGAIMPORTER=/opt/pganalytics/bin/pganalytics-importer
+USER=pganalytics
+NAME=pgaimporter
+PID_FILE=/var/run/${NAME}/${NAME}.pid
+export PATH=$PATH:/usr/local/pgsql/bin
+export LD_LIBRARY_PATH=/usr/local/pgsql/lib
+
+mkdir -p /var/run/${NAME}
+mkdir -p /var/log/${NAME}
+chown -R pganalytics. /var/run/${NAME}
+chown -R pganalytics. /var/log/${NAME}
+
+lockfile="/var/lock/subsys/${NAME}.lck"
+
+start() {
+    echo -n $"Starting $NAME: "
+    if [ -f $PID_FILE ] && kill -0 $(cat $PID_FILE) 2>/dev/null; then
+        echo -n "Service already running" && warning
+        echo
+        return 1
+    else
+        pg_isready >/dev/null
+	while [ $? != 0 ]; do
+  		sleep 1;
+  		pg_isready >/dev/null
+	done
+       	su - $USER -c "$PGAIMPORTER --groups --pgadb=\"user=pganalytics dbname=pganalytics\" > /var/log/pgaimporter/pganalytics_importer.log 2>&1 & echo \$! > $PID_FILE" 
+       	RETVAL=$?
+       	#PID=$!
+       	[ $RETVAL -eq 0 ] && touch ${lockfile} && success || failure
+       	echo
+       	#echo $PID > $PID_FILE
+    fi
+}
+
+stop() {
+    echo -n $"Stopping $NAME: "
+    killproc -p $PID_FILE
+    RETVAL=$?
+    [ $RETVAL -eq 0 ] && rm -f $lockfile && success || failure 
+    echo
+}
+
+restart() {
+    echo "Restarting $NAME"
+    stop
+    start
+}
+
+status() {
+    if [ -f $PID_FILE ] && kill -0 $(cat $PID_FILE) 2>/dev/null; then
+        echo "$NAME process is running (PID: `cat $PID_FILE`)"
+	echo
+    else
+    	echo "$NAME process is not running"
+	echo
+    fi
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        status
+        ;;
+    restart)
+        restart
+        ;;
+    *)
+        echo "Usage: {start|stop|status|restart}"
+        exit 1
+        ;;
+esac
+exit $RETVAL

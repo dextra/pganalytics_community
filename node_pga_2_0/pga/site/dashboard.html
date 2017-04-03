@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<html ng-app="pganalytics">
+<head>
+	<title>pgAnalytics</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	
+	<script src="js/utils.js"></script>
+	<script>forceUserLogged();</script>
+
+	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+	<script src="bower_components/angular/angular.js"></script>
+	<script src="bower_components/d3/d3.js"></script>
+	<script src="bower_components/nvd3/nv.d3.min.js"></script>
+	<script src="bower_components/angular-nvd3/dist/angular-nvd3.js"></script>
+	<script src="bower_components/gauge.js/dist/gauge.min.js"></script>
+
+	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+
+	<script src="bower_components/gridster/dist/jquery.gridster.js"></script>
+	<link rel="stylesheet" href="bower_components/gridster/dist/jquery.gridster.min.css" />
+
+	<script src="bower_components/datatables/media/js/dataTables.bootstrap.js"></script>
+	<script src="bower_components/prism/prism.js"></script>
+
+	<script src="js/table/utils/parseJsonToDataTable.js"></script>
+	<script src="js/table/pga.dataTableGenericExhibition.js"></script>
+	<script src="js/table/pga.dataTableGenericInteraction.js"></script>
+	<script src="js/table/pga.dataTableAnaliseSql.js"></script>
+	<script src="js/table/pga.dataTableEmpty.js"></script>
+	<script src="js/angular/pga.setup.js"></script>
+	<script src="js/graph/pga.graph.js"></script>
+
+	<script src="bower_components/moment/moment.js"></script>
+	<script src="js/bootstrap-datetimepicker.js"></script>
+	<script src="bower_components/angular-bootstrap-datetimepicker/js/datetimepicker.js"></script>
+	<script src="bower_components/angular-bootstrap-datetimepicker/i18n/angular-locale_pt-br.js"></script>
+
+	<!-- Services -->
+	<script src="js/services/genericService.js"></script>
+	<script src="js/services/databaseService.js"></script>
+	<script src="js/services/i18nService.js"></script>
+
+	<!-- Directives -->
+	<script src="js/directives/widgetMain.js"></script>
+
+	<!-- Controllers-->
+	<script src="js/controllers/mainController.js"></script>
+	<script src="js/controllers/dashboardController.js"></script>
+
+	<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css"/>
+
+	<link rel="stylesheet" href="bower_components/nvd3/nv.d3.css"/>
+	<!--
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	-->
+	<link rel="stylesheet" href="bower_components/datatables/media/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" href="bower_components/prism/prism.css">
+	<link rel="stylesheet" href="bower_components/angular-bootstrap-datetimepicker/css/datetimepicker.css">
+
+	<!-- Sideshow -->
+	<link rel="stylesheet" href="bower_components/sideshow/distr/fonts/sideshow-fontface.min.css">
+	<link rel="stylesheet" href="bower_components/sideshow/distr/stylesheets/sideshow.min.css">
+
+	<!--
+	<link rel="stylesheet/less" type="text/css" href="css/basic.less" />
+	-->
+	<link rel="stylesheet" href="css/pganalytics.css">
+
+	<!--
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css' />
+	<script src="bower_components/less/dist/less.js"></script>
+	-->
+
+	<!-- Google Analytics -->
+	<script type="text/javascript" src="//www.google-analytics.com/analytics.js"></script>
+
+</head>
+<body ng-controller='DashboardCtrl' class="dashboard">
+		<div class="content">
+			<header class="header">
+				<a href="/pga/" title="pgAnalytics"><img src="img/logo_pga.png" alt="pganalytics" class="logo"/></a>
+
+				<!-- {{ LOGO DO CLIENTE }} -->
+				<a href="/pga/" title="{{selectCustomer01.name}}"><img ng-src="img/logos/{{logo}}.png" alt="pganalytics" id="logo-cliente"/></a>
+				<button class="btn btn-link" ng-click="refreshIntervalStart()" ng-hide="refreshIntervalRunning"><i class="fa fa-play"></i></button>
+				<button class="btn btn-link" ng-click="refreshIntervalStop()" ng-show="refreshIntervalRunning"><i class="fa fa-pause"></i></button>
+				<button class="btn btn-link" data-toggle="modal" data-target="#database-modal">
+					<strong>{{ selectServer01.server_name }}<span ng-if="selectInstance01.port != 5432">:{{ selectInstance01.port }}</span>/<span ng-if="selectDatabase01.database_id">{{ selectDatabase01.database_name }}</span></strong>
+				</button>
+			</header> <!-- .header -->
+
+				<div class="area-dados form-inline">
+
+					<div id="main-widget">
+
+						<!-- Grafico de linhas -->
+						<div id="lineGraph">
+
+							<div id="mainWidgetContainer">
+								<div id="loading_hidder">
+									<div class="dashboard-contents">
+										<ul class="row">
+											<li ng-repeat="c in chartsData" ng-class="'dashboard-item-' + c.key + ' type-' + c.widget.type + ' ' + c.class" class="dashboard-item" disable-pga-grid="c.grid" pga-grid-drag-handler="h3">
+												<h3 i18n="{{c.key}}"></h3>
+												<pga-widget
+													ng-class="'chart-' + c.idx"
+													widget="c.widget"
+													data="c.data"
+													i18n-object="i18n"
+													options="{context: 'dashboard', serie: c.serie}"
+												>
+												</pga-widget>
+												<div class="loading-component" ng-hide="c.data"></div>
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div class="loading-main" ng-hide="mainNavigation.currStep > mainNavigation.LOADING_DATABASE"></div>
+								<div class="error-main" ng-show="widgetError" i18n="widgetError" i18n-params="widgetError"></div>
+							</div>
+
+						</div>
+
+					</div> <!-- #main-widget -->
+				</div> <!-- .area-dados -->
+
+		<!-- Modal de banco de dados -->
+		<div class="modal" id="database-modal" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title" i18n="select-server-instance-database"></h3>
+					</div>
+
+					<div class="modal-body">
+						<ul>
+							<li ng-show="customers && customers.length > 1">
+							<label i18n="customer"></label>
+							<select ng-model="selectCustomer01"
+									ng-options="p as p.name for p in customers"
+									required
+									class="form-control"
+									ng-show="mainNavigation.currStep > mainNavigation.LOADING_CUSTOMER">
+							</select>
+							<span class="loading-component" ng-hide="mainNavigation.currStep > mainNavigation.LOADING_CUSTOMER"></span>
+							</li>
+							<li>
+								<label i18n="server"></label>
+								<select ng-model="selectServer01"
+									ng-options="p as p.server_name for p in servers"
+									required
+									class="form-control"
+									ng-show="mainNavigation.currStep > mainNavigation.LOADING_SERVER">
+								</select>
+								<span class="loading-component" ng-hide="mainNavigation.currStep > mainNavigation.LOADING_SERVER"></span>
+							</li>
+						</ul>
+						<ul>
+							<li>
+								<label i18n="instance"></label>
+								<select ng-model="selectInstance01"
+									ng-options="p as p.instance_name for p in instances"
+									class="form-control"
+									ng-show="mainNavigation.currStep > mainNavigation.LOADING_INSTANCE">
+								</select>
+								<span class="loading-component" ng-hide="mainNavigation.currStep > mainNavigation.LOADING_INSTANCE"></span>
+							</li>
+						</ul>
+						<ul>
+							<li>
+								<label i18n="database"></label>
+								<select ng-model="selectDatabase01"
+									ng-options="p as p.database_name for p in databases"
+									class="form-control"
+									ng-show="mainNavigation.currStep > mainNavigation.LOADING_DATABASE">
+								</select>
+								<span class="loading-component" ng-hide="mainNavigation.currStep > mainNavigation.LOADING_DATABASE"></span>
+							</li>
+						</ul>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" data-dismiss="modal">OK</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<footer>
+			Copyright &copy; 2015 - <a href="http://www.pganalytics.com.br/" title="pgAnalytics">pgAnalytics</a>, por <a href="http://www.dextra.com.br/postgres" title="Dextra - Crafting Software Transforming Business">Dextra</a>
+		</footer>
+</body>
+
+    <!-- Sideshow -->
+	<script src="bower_components/sideshow/distr/dependencies/jazz.min.js"></script>
+	<script src="bower_components/sideshow/distr/dependencies/pagedown.min.js"></script>
+	<script src="bower_components/sideshow/distr/sideshow.js"></script>
+
+	<script src="js/tutorials/sideshow.config.js"></script>
+	<script src="js/tutorials/introduction.js"></script>
+
+	<script src="js/menu-hidder.js"></script>
+
+	<script src="bower_components/rgbcolor/rgbcolor.js"></script>
+	<script src="bower_components/canvg/dist/canvg.js"></script>
+
+<!-- Configure and send Google Analytics pageview -->
+<script>
+	GA.sendPageView();
+</script>
+
+</html>
+

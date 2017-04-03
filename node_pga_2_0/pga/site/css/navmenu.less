@@ -1,0 +1,267 @@
+/* Hidden capability based on: http://callmenick.com/2014/03/26/slide-and-push-menus-with-css3-transitions/ */
+
+/*** Positioning and hidden capability ***/
+
+nav.menu {
+	position: fixed;
+	z-index: 100;
+	width: @menu-width;
+	margin: 0;
+	//top: @header-height;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	.transition-all;
+}
+
+.nav-toggler {
+	.make-fa-icon(@fa-var-bars, false);
+	span {
+		.hide-text();
+	}
+	font-weight: bold;
+	.btn-default;
+}
+
+@media (max-width: @screen-xs-max) {
+
+	body {
+		overflow-x: hidden;
+	}
+
+	#wrapper {
+		position: relative;
+		z-index: 10;
+		top: @header-height;
+		left: 0;
+		.transition-all;
+	}
+
+	nav.menu {
+		left: -@menu-width;
+		.logo {
+			opacity: 0;
+			.transition-all;
+		}
+	}
+
+	.header {
+		left: 0;
+		.transition-all;
+		.logo {
+			margin-left: 0;
+			opacity: 1;
+			.transition-all;
+		}
+	}
+
+	.mask {
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 15;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.8);
+		display: none;
+	}
+
+	body .nav-toggler {
+		.btn-primary;
+	}
+	body.navmenu-toggle-clicked {
+		nav.menu {
+			left: 0;
+			.logo {
+				opacity: 1;
+				.transition-all;
+			}
+		}
+		.header {
+			left: @menu-width;
+			.transition-all;
+			.logo {
+				margin-left: @header-logo-width * -1;
+				opacity: 0;
+				.transition-all;
+			}
+		}
+		.mask {
+			display: block;
+		}
+		#wrapper {
+			left: @menu-width;
+		}
+		.nav-toggler {
+			.btn-default;
+		}
+	}
+}
+
+@media (min-width: @screen-sm-min) {
+
+	#wrapper {
+		margin-left: @menu-width;
+		margin-top: @header-height;
+		.transition-all;
+	}
+
+	body {
+		overflow-x:hidden;
+	}
+	.header {
+		left: @menu-width;
+		.transition-all;
+		.logo {
+			margin-left: @header-logo-width * -1;
+			opacity: 0;
+			.transition-all;
+		}
+	}
+	nav.menu .logo {
+		opacity: 1;
+		.transition-all;
+	}
+
+	body.navmenu-toggle-clicked {
+
+		nav.menu {
+			position: fixed;
+			z-index: 20;
+			left: @menu-width * -1;
+			.transition-all;
+			.logo {
+				opacity: 0;
+				.transition-all;
+			}
+		}
+		.header {
+			left: 0;
+			.transition-all;
+			.logo {
+				margin-left: 0;
+				opacity: 1;
+				.transition-all;
+			}
+		}
+
+		#wrapper {
+			margin-left: 0;
+			.transition-all;
+		}
+
+		.nav-toggler {
+			.btn-primary;
+		}
+
+	}
+
+}
+
+/*** Menu style ***/
+
+.menu-controle ul {
+	> li.selected > a, .current > a {
+		font-weight: bold;
+	}
+	.selected {
+		background-color: #428bca;
+		color: #fff;
+		outline: 0 none;
+		text-decoration: none;
+	}
+	li {
+		display: block;
+		a {
+			padding: 0.4em 0.4em 0.4em 1em;
+			display: block;
+		}
+		ul {
+			display: none;
+			padding: 0;
+			border-top: 1px solid #333;
+			background: #333;
+		}
+		li {
+			border: 0;
+			a {
+				font-size: .9em;
+				padding: 0 0 0 36px;
+			}
+		}
+	}
+}
+
+.menu-controle ul li.current ul {
+	display: block;
+}
+
+nav.menu {
+	/*
+	width: 16.5em;
+	height: 100%;
+	position: fixed;
+	z-index: 2;
+	*/
+	.sombra;
+	overflow: auto;
+	background-color: #222;
+	color: #fff;
+	font-size: 1.125em;
+	font-weight: 300;
+	.sombra;
+	a {
+		color: #f0f0f0;
+		line-height: 2em;
+		font-weight: 300;
+	}
+	ul {
+		list-style: none;
+		padding: 1.25em 0;
+		display: block;
+		li {
+			border-top: 1px solid #333;
+		}
+	}
+	.banco-selecionado {
+		padding: 1em 1.25em 0;
+		button {
+			margin: 1em 0;
+			.make-glyphicon({.glyphicon-filter});
+		}
+	}
+	#logout {
+		padding-left: 1.125em;
+		a {
+			.make-fa-icon(@fa-var-sign-out);
+			font-size: 1em;
+			padding-left: 0;
+			span {
+				font-size: 1.25em;
+			}
+		}
+	}
+}
+
+#database-modal, #feedback-modal {
+	.modal-body {
+		ul {
+			list-style: none;
+			padding: 0;
+		}
+		li {
+			padding: 0.5em 0 0 0;
+		}
+	}
+}
+
+
+/* Icons */
+.overview > a {.make-fa-icon(@fa-var-eye);}
+.pgstats > a {.make-fa-icon(@fa-var-database);}
+.sostats > a {.make-fa-icon(@fa-var-desktop);}
+.sql > a {.make-fa-icon(@fa-var-gears);}
+.backups > a {.make-fa-icon(@fa-var-hdd-o);}
+.diagnostics > a {.make-fa-icon(@fa-var-comments);}
+.pglog > a {.make-fa-icon(@fa-var-search);}
+

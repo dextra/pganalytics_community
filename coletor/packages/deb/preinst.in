@@ -1,0 +1,6 @@
+#!/bin/sh
+
+mkdir -p @CMAKE_INSTALL_PREFIX@
+mkdir -p @CMAKE_INSTALL_PREFIX@/bin
+mkdir -p @CMAKE_INSTALL_PREFIX@/etc
+

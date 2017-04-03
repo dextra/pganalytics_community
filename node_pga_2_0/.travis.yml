@@ -1,0 +1,9 @@
+language: java
+jdk:
+  - oraclejdk7
+before_install: ./cmds/ci/before_install.sh
+install: ./cmds/ci/install.sh
+script: ./cmds/ci/script.sh && echo "Script done"
+env:
+  - secure: O1gSqWGESKLzwVMeAdTcLPDQOFMnFlzSizNkQj2ydgzY2aDsDEsVazuW/dDlOHKM24Ure6u3QhEIRbwRhQk6DZIDFKFwbfOmT8F7HX+7G9rx67VhSR1pArEcPklGzfdLw37das9DN0WsD6n2fax4+AxsAoJE41HvcOAdNqCey4c=
+

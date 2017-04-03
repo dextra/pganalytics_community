@@ -1,0 +1,23 @@
+{
+  "name": "js",
+  "version": "0.0.0",
+  "homepage": "website",
+  "authors": [
+    "Vinnix Schmidt"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules"
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.3.0",
+    "jquery": "~2.1.1",
+    "d3": "~3.4.13",
+    "nvd3": "~1.1.15-beta",
+    "angularjs-nvd3-directives": "~0.0.7"
+  }
+}

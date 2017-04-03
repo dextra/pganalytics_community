@@ -1,0 +1,66 @@
+{
+  "name": "pgAnalytics",
+  "version": "2.0.0-SNAPSHOT",
+  "description": "pgAnalytics",
+  "main": "pganalytics-server.js",
+  "scripts": {
+    "test": "TZ=America/Sao_Paulo ./node_modules/karma/bin/karma start --no-auto-watch --single-run --browsers PhantomJS,Firefox",
+    "test-advanced": "ret=0; node test.js; ret=$((ret + $?)); ./node_modules/karma/bin/karma start --no-auto-watch --single-run --browsers PhantomJS,Firefox; ret=$((ret + $?)); exit $ret",
+    "prestart": "npm install",
+    "start": "node pganalytics-server.js"
+  },
+  "dependencies": {
+    "pg": "~3.4.x",
+    "express": "4.x",
+    "serve-favicon": "~2.1.1",
+    "morgan": "~1.0.0",
+    "cookie-parser": "~1.0.1",
+    "body-parser": "~1.0.0",
+    "keypair": "~1.0.0",
+    "nodemailer": "~1.3.0",
+    "less": "~2.2.0",
+    "compression": "",
+    "forwarded": "",
+    "split": "", 
+    "ee-first": "", 
+    "destroy": "", 
+    "mime": "", 
+    "crc": "", 
+    "ms": "", 
+    "ipaddr.js": "", 
+    "negotiator": "", 
+    "mime-types": "", 
+    "media-typer": "", 
+    "bytes": "", 
+    "string_decoder": "", 
+    "iconv-lite": "", 
+    "libbase64": "", 
+    "libqp": "", 
+    "addressparser": "", 
+    "through2": "", 
+    "duplexer2": "", 
+    "smtp-connection": "", 
+    "nodemailer-wellknown": "",
+    "mime-db": ""
+  },
+  "devDependencies": {
+    "jasmine-core": "^2.2.0",
+    "karma": "^0.12.31",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-coverage": "^0.2.7",
+    "karma-firefox-launcher": "^0.1.4",
+    "karma-jasmine": "^0.3.5",
+    "karma-junit-reporter": "^0.2.2",
+    "karma-notify-reporter": "^0.1.1",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "qunitjs": "1.15.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/"
+  },
+  "author": "Dextra",
+  "bugs": {
+    "url": "https://github.com/"
+  }
+}

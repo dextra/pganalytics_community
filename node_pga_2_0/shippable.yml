@@ -1,0 +1,8 @@
+language: node_js
+node_js:
+  - 0.10.31
+before_install: ./cmds/ci/before-install.sh
+install: ./cmds/ci/install.sh
+script: ./cmds/ci/script.sh
+env:
+  - secure: 

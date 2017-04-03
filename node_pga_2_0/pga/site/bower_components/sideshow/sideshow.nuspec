@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>sideshow</id>
+        <version>0.4.1</version>
+        <title>Sideshow</title>
+        <authors>Alcides Queiroz</authors>
+        <owners>Fortes Informática</owners>
+        <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+        <projectUrl>https://github.com/fortesinformatica/Sideshow</projectUrl>
+        <iconUrl>http://fortesinformatica.github.io/Sideshow/favicon.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <developmentDependency>true</developmentDependency>
+        <description>Sideshow is a powerful javascript library which aims to reduce your user's learning curve by providing a way to create step-by-step interactive helps.</description>
+        <summary>An incredible Javascript interactive help Library</summary>
+        <copyright>Copyright 2013-2015 Alcides Queiroz [alcidesqueiroz(at)gmail(dot)com]</copyright>
+        <tags>sideshow, interactive, tutorial, tour, help, wizard, step-by-step, library, script, javascript</tags>
+    </metadata>
+    <files>
+        <file src="distr\fonts\open-sans-family\opensans-bold.eot" target="content\Content\sideshow\fonts\open-sans-family\opensans-bold.eot" />
+        <file src="distr\fonts\open-sans-family\opensans-bold.svg" target="content\Content\sideshow\fonts\open-sans-family\opensans-bold.svg" />
+        <file src="distr\fonts\open-sans-family\opensans-bold.ttf" target="content\Content\sideshow\fonts\open-sans-family\opensans-bold.ttf" />
+        <file src="distr\fonts\open-sans-family\opensans-bold.woff" target="content\Content\sideshow\fonts\open-sans-family\opensans-bold.woff" />
+        <file src="distr\fonts\open-sans-family\opensans-bolditalic.eot" target="content\Content\sideshow\fonts\open-sans-family\opensans-bolditalic.eot" />
+        <file src="distr\fonts\open-sans-family\opensans-bolditalic.svg" target="content\Content\sideshow\fonts\open-sans-family\opensans-bolditalic.svg" />
+        <file src="distr\fonts\open-sans-family\opensans-bolditalic.ttf" target="content\Content\sideshow\fonts\open-sans-family\opensans-bolditalic.ttf" />
+        <file src="distr\fonts\open-sans-family\opensans-bolditalic.woff" target="content\Content\sideshow\fonts\open-sans-family\opensans-bolditalic.woff" />
+        <file src="distr\fonts\open-sans-family\opensans-extrabold.eot" target="content\Content\sideshow\fonts\open-sans-family\opensans-extrabold.eot" />
+        <file src="distr\fonts\open-sans-family\opensans-extrabold.svg" target="content\Content\sideshow\fonts\open-sans-family\opensans-extrabold.svg" />
+        <file src="distr\fonts\open-sans-family\opensans-extrabold.ttf" target="content\Content\sideshow\fonts\open-sans-family\opensans-extrabold.ttf" />
+        <file src="distr\fonts\open-sans-family\opensans-extrabold.woff" target="content\Content\sideshow\fonts\open-sans-family\opensans-extrabold.woff" />
+        <file src="distr\fonts\open-sans-family\opensans-extrabolditalic.eot" target="content\Content\sideshow\fonts\open-sans-family\opensans-extrabolditalic.eot" />
+        <file src="distr\fonts\open-sans-family\opensans-extrabolditalic.svg" target="content\Content\sideshow\fonts\open-sans-family\opensans-extrabolditalic.svg" />
+        <file src="distr\fonts\open-sans-family\opensans-extrabolditalic.ttf" target="content\Content\sideshow\fonts\open-sans-family\opensans-extrabolditalic.ttf" />
+        <file src="distr\fonts\open-sans-family\opensans-extrabolditalic.woff" target="content\Content\sideshow\fonts\open-sans-family\opensans-extrabolditalic.woff" />
+        <file src="distr\fonts\open-sans-family\opensans-italic.eot" target="content\Content\sideshow\fonts\open-sans-family\opensans-italic.eot" />
+        <file src="distr\fonts\open-sans-family\opensans-italic.svg" target="content\Content\sideshow\fonts\open-sans-family\opensans-italic.svg" />
+        <file src="distr\fonts\open-sans-family\opensans-italic.ttf" target="content\Content\sideshow\fonts\open-sans-family\opensans-italic.ttf" />
+        <file src="distr\fonts\open-sans-family\opensans-italic.woff" target="content\Content\sideshow\fonts\open-sans-family\opensans-italic.woff" />
+        <file src="distr\fonts\open-sans-family\opensans-light.eot" target="content\Content\sideshow\fonts\open-sans-family\opensans-light.eot" />
+        <file src="distr\fonts\open-sans-family\opensans-light.svg" target="content\Content\sideshow\fonts\open-sans-family\opensans-light.svg" />
+        <file src="distr\fonts\open-sans-family\opensans-light.ttf" target="content\Content\sideshow\fonts\open-sans-family\opensans-light.ttf" />
+        <file src="distr\fonts\open-sans-family\opensans-light.woff" target="content\Content\sideshow\fonts\open-sans-family\opensans-light.woff" />
+        <file src="distr\fonts\open-sans-family\opensans-lightitalic.eot" target="content\Content\sideshow\fonts\open-sans-family\opensans-lightitalic.eot" />
+        <file src="distr\fonts\open-sans-family\opensans-lightitalic.svg" target="content\Content\sideshow\fonts\open-sans-family\opensans-lightitalic.svg" />
+        <file src="distr\fonts\open-sans-family\opensans-lightitalic.ttf" target="content\Content\sideshow\fonts\open-sans-family\opensans-lightitalic.ttf" />
+        <file src="distr\fonts\open-sans-family\opensans-lightitalic.woff" target="content\Content\sideshow\fonts\open-sans-family\opensans-lightitalic.woff" />
+        <file src="distr\fonts\open-sans-family\opensans-regular.eot" target="content\Content\sideshow\fonts\open-sans-family\opensans-regular.eot" />
+        <file src="distr\fonts\open-sans-family\opensans-regular.svg" target="content\Content\sideshow\fonts\open-sans-family\opensans-regular.svg" />
+        <file src="distr\fonts\open-sans-family\opensans-regular.ttf" target="content\Content\sideshow\fonts\open-sans-family\opensans-regular.ttf" />
+        <file src="distr\fonts\open-sans-family\opensans-regular.woff" target="content\Content\sideshow\fonts\open-sans-family\opensans-regular.woff" />
+        <file src="distr\fonts\open-sans-family\opensans-semibold.eot" target="content\Content\sideshow\fonts\open-sans-family\opensans-semibold.eot" />
+        <file src="distr\fonts\open-sans-family\opensans-semibold.svg" target="content\Content\sideshow\fonts\open-sans-family\opensans-semibold.svg" />
+        <file src="distr\fonts\open-sans-family\opensans-semibold.ttf" target="content\Content\sideshow\fonts\open-sans-family\opensans-semibold.ttf" />
+        <file src="distr\fonts\open-sans-family\opensans-semibold.woff" target="content\Content\sideshow\fonts\open-sans-family\opensans-semibold.woff" />
+        <file src="distr\fonts\open-sans-family\opensans-semibolditalic.eot" target="content\Content\sideshow\fonts\open-sans-family\opensans-semibolditalic.eot" />
+        <file src="distr\fonts\open-sans-family\opensans-semibolditalic.svg" target="content\Content\sideshow\fonts\open-sans-family\opensans-semibolditalic.svg" />
+        <file src="distr\fonts\open-sans-family\opensans-semibolditalic.ttf" target="content\Content\sideshow\fonts\open-sans-family\opensans-semibolditalic.ttf" />
+        <file src="distr\fonts\open-sans-family\opensans-semibolditalic.woff" target="content\Content\sideshow\fonts\open-sans-family\opensans-semibolditalic.woff" />
+        <file src="distr\fonts\sideshow-icons\sideshow-icons.eot" target="content\Content\sideshow\fonts\sideshow-icons\sideshow-icons.eot" />
+        <file src="distr\fonts\sideshow-icons\sideshow-icons.svg" target="content\Content\sideshow\fonts\sideshow-icons\sideshow-icons.svg" />
+        <file src="distr\fonts\sideshow-icons\sideshow-icons.ttf" target="content\Content\sideshow\fonts\sideshow-icons\sideshow-icons.ttf" />
+        <file src="distr\fonts\sideshow-icons\sideshow-icons.woff" target="content\Content\sideshow\fonts\sideshow-icons\sideshow-icons.woff" />
+        <file src="distr\fonts\sideshow-fontface.min.css" target="content\Content\sideshow\fonts\sideshow-fontface.min.css" />
+        <file src="distr\stylesheets\sideshow.min.css" target="content\Content\sideshow\sideshow.min.css" />
+        <file src="distr\dependencies\jazz.min.js" target="content\Scripts\dependencies\jazz.min.js" />
+        <file src="distr\dependencies\jquery.min.js" target="content\Scripts\dependencies\jquery.min.js" />
+        <file src="distr\dependencies\pagedown.min.js" target="content\Scripts\dependencies\pagedown.min.js" />
+        <file src="distr\sideshow.js" target="content\Scripts\sideshow.js" />
+        <file src="distr\sideshow.min.js" target="content\Scripts\sideshow.min.js" />
+    </files>
+</package>

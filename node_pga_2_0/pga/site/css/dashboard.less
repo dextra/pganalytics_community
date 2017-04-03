@@ -1,0 +1,254 @@
+body.dashboard {
+
+	/*** Fix main layout to fit Dashboard requirements ***/
+
+	& {
+		font-size: 12px;
+		margin-top: @header-height;
+	}
+
+	footer {
+		text-align: right;
+		color: #333;
+		background: #f0f0f0;
+		margin-top: 10px;
+		font-style: italic;
+		font-size: .8em;
+		padding: 10px 10px 2px;
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 11; /* gridster uses 10 */
+	}
+
+	.header {
+		left: 0;
+		.logo {
+			margin-left: 0;
+			opacity: 1;
+		}
+	}
+
+	.menu {
+		display: none;
+	}
+
+	/*** Dashboard layout ***/
+
+	#mainWidgetContainer {
+		padding-top: @comp-sep-size;
+		clear:both;
+	}
+	
+	#mainWidgetContainer h3 {
+		font-size: 1em;
+		font-weight: bold;
+		text-transform: uppercase;
+		text-align: center;
+	}
+	
+	#mainWidgetContainer .loading-component {
+		height: 300px;
+		text-align: center;
+		width: 100%;
+		margin: 0 0;
+		background: url(../img/loading-big.gif) no-repeat center center;
+	}
+	
+	#mainWidgetContainer svg {
+		height: 300px;
+	}
+
+	@bg-color: #333;
+	@fg-color: #c0c0c0;
+	@fg-highlight-color: #fff;
+	@fg-tooltip-color: @fg-highlight-color;
+	@bg-tooltip-color: darken(@bg-color, 10%);
+
+	/*
+	@bg-color: #fff;
+	@fg-color: #333;
+	@fg-highlight-color: #000;
+	@fg-tooltip-color: @fg-highlight-color;
+	@bg-tooltip-color: darken(@bg-color, 10%);
+	*/
+
+
+	& { /* this is the body */
+		background: @bg-color;
+		color: @fg-color;
+	}
+
+	h1,h2,h3,h4,h5,h6 {
+		color: @fg-highlight-color;
+	}
+
+	.area-periodo {
+		display: none;
+	}
+
+	.nvd3 {
+		.nv-y .tick line, .nv-x.nv-axis line {
+			display: none;
+		}
+		text {
+			color: @fg-highlight-color;
+			fill: @fg-highlight-color;
+		}
+		.nv-axis path {
+			stroke: @fg-highlight-color;
+			stroke-opacity: 1;
+		}
+	}
+
+	.nvtooltip {
+		background: @bg-tooltip-color;
+		color: @fg-tooltip-color;
+		padding-right: 8px;
+	}
+
+	.dataTables_scrollHead table.dataTable thead .sorting_asc,
+	.dataTables_scrollHead table.dataTable thead .sorting_desc,
+	.dataTables_scrollHead table.dataTable thead .sorting,
+	table.dataTable th,
+	table.dataTable td
+	{
+		background-color: @bg-color;
+		&:before {
+			display: none;
+		}
+	}
+
+	table.dataTable th {
+		color: @fg-highlight-color;
+	}
+
+	table.dataTable td {
+		color: @fg-color;
+	}
+
+	.dataTable-navigate, .dataTable-information, .dataTable-pages, .dataTables_filter {
+		display: none;
+	}
+
+	table.dataTable {
+		td.key-critical,
+		td.key-warning,
+		td.key-information {
+			font-weight: bold;
+			&.key-critical {
+				color: @alert-critical-color;
+			}
+			&.key-warning {
+				color: @alert-warning-color;
+			}
+			&.key-information {
+				color: @alert-info-color;
+			}
+		}
+	}
+
+	table.dataTable {
+		.alert-critical,
+		.alert-warning,
+		.alert-information {
+			font-weight: bold;
+			color: #fff;
+			padding: .1em .3em;
+			.border-rounded;
+			&.alert-critical {
+				background-color: @alert-critical-color;
+			}
+			&.alert-warning {
+				background-color: @alert-warning-color;
+			}
+			&.alert-information {
+				background-color: @alert-info-color;
+			}
+		}
+	}
+
+	/*
+	table.dataTable {
+		td.key-critical,
+		td.key-warning,
+		td.key-information {
+			font-weight: bold;
+			padding: .1em .3em;
+			color: @fg-highlight-color;
+			.border-rounded;
+			&.key-critical {
+				background-color: @alert-critical-color;
+			}
+			&.key-warning {
+				background-color: @alert-warning-color;
+			}
+			&.key-information {
+				background-color: @alert-info-color;
+			}
+		}
+	}
+	*/
+
+	.gauge {
+		.gauge-container {
+			text-align: center;
+		}
+		.gauge-text {
+			text-align: center;
+			font-size: 1.8em;
+			font-weight: bold;
+			text-shadow: 0 0 2px @bg-tooltip-color;
+			color: @fg-highlight-color;
+			margin-top: -1.2em;
+			position: relative; /* Hack to move it over the gauge on Chrome */
+		}
+	}
+
+	.dashboard-contents {
+		ul {
+			list-style: none;
+		}
+		&:not(.gridster) {
+			.dashboard-item {
+				.make-xs-column(12);
+				.make-sm-column(6);
+				.make-md-column(4);
+				.make-lg-column(4);
+				&.start-line:before {
+					.clearfix();
+				}
+				@media (min-width: @screen-sm-min) {
+					&.dashboard-item-dashboard_diskusage {
+						margin-top: -160px;
+					}
+					&.type-gauge {
+						h3 {
+							margin-bottom: 0;
+						}
+						canvas {
+							margin: -20px;
+						}
+					}
+				}
+			}
+		}
+		&.gridster {
+			h3 {
+				cursor: move;
+				border-radius: 2px;
+			}
+			.dashboard-item:hover h3 {
+				background: @bg-tooltip-color;
+				.make-fa-icon(@fa-var-arrows);
+			}
+			.dashboard-item.dragging {
+				opacity: .5;
+				background: @bg-color;
+			}
+		}
+	}
+
+}
+

@@ -1,0 +1,36 @@
+<div class="widget-controls">
+
+	<div class="actions" ng-show="options.context !== 'dashboard'">
+		<div class="btn-group" role="group">
+			<button class="btn btn-primary" ng-class="display == 'chart' ? 'active' : ''" ng-click="display = 'chart';"><i class="fa fa-line-chart"></i></button>
+			<button class="btn btn-primary" ng-class="display == 'table' ? 'active' : ''" ng-click="display = 'table';"><i class="fa fa-table"></i></button>
+		</div>
+		<button class="btn btn-primary save-chart"><i class="fa fa-save"></i></button>
+		<span class="save-chart-loading loading-component" style="display:none"></span>
+	</div>
+
+	<div ng-if="!options.serie">
+		<div class="serie-selector" ng-show="display == 'chart'">
+			<label ng-repeat="(key, serie) in widget.extraParam.series">
+				<input
+				type="radio"
+				name="currentSerie"
+				ng-value="key"
+				ng-model="$parent.$parent.currentSerie"
+				/>
+				<span i18n="{{key}}"></span>
+			</label>
+		</div>
+	</div>
+
+</div>
+
+<div class="widget-container">
+	<div ng-show="!display || display == 'chart'">
+		<nvd3 options="chartOptions" data="chartData" api="chartApi"></nvd3>
+	</div>
+	<div ng-show="display == 'table'">
+		<pga-table data="data" widget="widget" api="tableApi" options="{context: 'chart'}" i18nObject="i18nObject"></pga-table>
+	</div>
+</div>
+

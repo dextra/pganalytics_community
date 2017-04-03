@@ -1,0 +1,84 @@
+/** Copyright 2014 Dextra **/
+// platform options
+#ifndef WIN32
+#cmakedefine WIN32
+#endif
+
+#cmakedefine UNIX
+
+// unset WIN32 for cygwin environment
+#cmakedefine CYGWIN
+#ifdef CYGWIN
+#  undef WIN32
+#endif
+
+#cmakedefine APPLE
+
+// installed libraries
+#cmakedefine HAVE_INTTYPES_H 
+#cmakedefine HAVE_STDINT_H   
+#cmakedefine HAVE_STDLIB_H   
+#cmakedefine HAVE_LIMITS_H   
+#cmakedefine HAVE_SYS_TYPES_H
+#cmakedefine HAVE_GETOPT_H   
+#cmakedefine HAVE_STRTOIMAX_F
+#cmakedefine HAVE_STRPTIME_F 
+#cmakedefine WITH_SSL
+#cmakedefine HAVE_STRUCT_OPTION
+
+/* app versioning */
+#define APP_MAJOR_VERSION @APP_MAJOR_VERSION@
+#define APP_MINOR_VERSION @APP_MINOR_VERSION@
+#define APP_PATCH_VERSION @APP_PATCH_VERSION@
+
+#define APP_VERSION           "@APP_MAJOR_VERSION@.@APP_MINOR_VERSION@.@APP_PATCH_VERSION@"
+#define GIT_DESC              "@GIT_DESC@"
+#define RC_FILEVERSION         @APP_MAJOR_VERSION@,@APP_MINOR_VERSION@,0,@APP_PATCH_VERSION@
+#define RC_FILEVERSION_STRING "@APP_MAJOR_VERSION@.@APP_MINOR_VERSION@.0.@APP_PATCH_VERSION@\n"
+#define RC_APP_ICON 101
+#define RC_MONITOR_ICON (RC_APP_ICON + 1)
+
+#define BEGIN_APP_NAMESPACE namespace pga {
+#define END_APP_NAMESPACE }
+
+#define MAXFILEPATH 4096
+
+#ifndef DIRECTORY_SEPARATOR
+#ifndef __WIN32__
+#define DIRECTORY_SEPARATOR "/"
+#else
+#define DIRECTORY_SEPARATOR "\\"
+#endif
+#endif
+
+/* Uses a directory structure similar to Maildir, in order to save files */
+#define COLLECT_DIR_TMP DIRECTORY_SEPARATOR "tmp"
+#define COLLECT_DIR_NEW DIRECTORY_SEPARATOR "new"
+#define COLLECT_DIR_STATES DIRECTORY_SEPARATOR "stat"
+#define COLLECT_DIR_LOG DIRECTORY_SEPARATOR "log"
+#define COLLECT_STATE_FILE_SYSSTAT COLLECT_DIR_STATES DIRECTORY_SEPARATOR "sysstat.state"
+#define COLLECT_STATE_FILE_LOG COLLECT_DIR_STATES DIRECTORY_SEPARATOR "log.state"
+
+/**
+ * A hard limit on the maximum number of files to push action.
+ * XXX: When this limit is reached, the files are not ordered before push
+ */
+#define MAX_FILES_TO_PUSH 200
+
+/**
+ * Limit of S3 log file to read in memory.
+ */
+#define MAX_S3_QUEUE_LOG_FILE_SIZE 10*1024*1024 /* 10MB */
+
+#define S3_DATA_DIR "data"
+#define S3_NEW_FILES_DIR "new"
+#define S3_ERR_FILES_DIR "err"
+#define S3_DONE_FILES_DIR "done"
+#define S3_LOG_FILES_DIR "logs"
+
+#ifdef __GNUC__
+#define IGNORE_UNUSED_WARN __attribute__ ((unused))
+#else
+#define IGNORE_UNUSED_WARN
+#endif
+

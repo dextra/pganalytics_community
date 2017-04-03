@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<html ng-app="pganalytics">
+<head>
+	<title>pgAnalytics</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	
+	<script src="js/utils.js"></script>
+	<script>forceUserLogged();</script>
+
+	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+	<script src="bower_components/angular/angular.js"></script>
+	<script src="bower_components/d3/d3.js"></script>
+	<script src="bower_components/nvd3/nv.d3.min.js"></script>
+	<script src="bower_components/angular-nvd3/dist/angular-nvd3.js"></script>
+
+	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+
+	<script src="bower_components/datatables/media/js/dataTables.bootstrap.js"></script>
+	<script src="bower_components/prism/prism.js"></script>
+
+	<script src="js/table/utils/parseJsonToDataTable.js"></script>
+	<script src="js/table/pga.dataTableGenericExhibition.js"></script>
+	<script src="js/table/pga.dataTableGenericInteraction.js"></script>
+	<script src="js/table/pga.dataTableAnaliseSql.js"></script>
+	<script src="js/table/pga.dataTableEmpty.js"></script>
+	<script src="js/angular/pga.setup.js"></script>
+	<script src="js/graph/pga.graph.js"></script>
+
+	<script src="bower_components/moment/moment.js"></script>
+	<script src="js/bootstrap-datetimepicker.js"></script>
+	<script src="bower_components/angular-bootstrap-datetimepicker/js/datetimepicker.js"></script>
+	<script src="bower_components/angular-bootstrap-datetimepicker/i18n/angular-locale_pt-br.js"></script>
+
+	<!-- Services -->
+	<script src="js/services/genericService.js"></script>
+	<script src="js/services/databaseService.js"></script>
+	<script src="js/services/i18nService.js"></script>
+
+	<!-- Directives -->
+	<script src="js/directives/widgetMain.js"></script>
+
+	<!-- Controllers-->
+	<script src="js/controllers/mainController.js"></script>
+
+	<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css"/>
+
+	<link rel="stylesheet" href="bower_components/nvd3/nv.d3.css"/>
+	<!--
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	-->
+	<link rel="stylesheet" href="bower_components/datatables/media/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" href="bower_components/prism/prism.css">
+	<link rel="stylesheet" href="bower_components/angular-bootstrap-datetimepicker/css/datetimepicker.css">
+
+	<!-- Sideshow -->
+	<link rel="stylesheet" href="bower_components/sideshow/distr/fonts/sideshow-fontface.min.css">
+	<link rel="stylesheet" href="bower_components/sideshow/distr/stylesheets/sideshow.min.css">
+
+	<!--
+	<link rel="stylesheet/less" type="text/css" href="css/basic.less" />
+	-->
+	<link rel="stylesheet" href="css/pganalytics.css">
+
+	<!--
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css' />
+	-->
+	<script src="bower_components/less/dist/less.js"></script>
+
+	<!-- Google Analytics -->
+	<script type="text/javascript" src="//www.google-analytics.com/analytics.js"></script>
+
+</head>
+<body ng-controller='MainCtrl' class="main">
+
+		<div class="loader-progress step-{{mainNavigation.currStep / mainNavigation.LOADED_ALL * 10 | number: 0}}"></div>
+		<div class="pre-loading-msg" ng-hide="!mainNavigation || mainNavigation.currStep > 0">
+			Carregando <span class="text-logo"><span class="logo-pg">pg</span><span class="logo-analytics">Analytics</span></span>...
+			<span class="loading-component"></span>
+		</div>
+
+		<div class="content start-hidden" ng-class="{'force-show': mainNavigation && mainNavigation.currStep > 0}">
+			<header class="header">
+					<a href="/pga/" title="pgAnalytics"><img src="img/logo_pga.png" alt="pgAnalytics" class="logo"/></a>
+					<button class="nav-toggler btn" title="{{i18n['menu-toggle'].tooltip}}"><span>{{i18n['menu-toggle'].title}}</span></button>
+					<button class="btn btn-primary btn-tour" id="run_sideshow"><span>Tour</span></button>
+					<!--
+					<button class="btn btn-primary btn-feedback" data-toggle="modal" data-target="#feedback-modal"><span>Feedback</span></button>
+					-->
+					<a href="/pga/dashboard.html" class="btn btn-primary btn-dashboard"><span>Dashboard</span></a>
+
+				<!-- {{ LOGO DO CLIENTE }} -->
+				<a href="/pga/" title="{{selectCustomer01.name}}"><img ng-src="img/logos/{{logo}}.png" height="50px" alt="pgAnalytics" id="logo-cliente"/></a>
+			</header> <!-- .header -->
+
+			<nav class="menu">
+				<a href="/pga/" title="pgAnalytics"><img src="img/logo_pga_white.png" alt="pganalytics" class="logo"/></a>
+				<div class="banco-selecionado" id="select-db">
+					<button class="btn btn-primary" data-toggle="modal" data-target="#database-modal" ng-class="btnFilterHighlight"><strong i18n="select-server-instance-database">Servidor/instância/banco</strong></button>
+						<div class="selected-name">
+							<code><strong>{{ selectServer01.server_name }}<span ng-if="selectInstance01.port != 5432">:{{ selectInstance01.port }}</span>/<span ng-if="selectDatabase01.database_id">{{ selectDatabase01.database_name }}</span></strong></code>
+						</div>
+				</div>
+				<div class="menu-controle" id="main-menu">
+					<ul>
+						<li ng-class="(getCurrentSectionAtLevel(0) == 'overview' ? 'current' : '')" class="overview">
+							<a href="javascript:void(0)" ng-click="setCurrentSection('overview')" ng-class="(currentSection == 'overview' ? 'selected' : '')" i18n="overview"></a>
+						</li>
+						<li ng-class="(getCurrentSectionAtLevel(0) == 'pgstats' ? 'current' : '')" class="pgstats">
+						<a href="javascript:void(0)" ng-click="setCurrentSection('pgstats')" ng-class="(currentSection == 'pgstats' ? 'selected' : '')" i18n="pgstats"></a>
+							<ul>
+								<li ng-class="(currentSection == 'pgstats.databases' ? 'selected' : '')"><a href="javascript:void(0)" ng-click="setCurrentSection('pgstats.databases')" i18n="pgstats.databases"></a></li>
+								<li ng-class="(currentSection == 'pgstats.tables' ? 'selected' : '')"><a href="javascript:void(0)" ng-click="setCurrentSection('pgstats.tables')" i18n="pgstats.tables"></a></li>
+								<li ng-class="(currentSection == 'pgstats.indexes' ? 'selected' : '')"><a href="javascript:void(0)" ng-click="setCurrentSection('pgstats.indexes')" i18n="pgstats.indexes"></a></li>
+								<li ng-class="(currentSection == 'pgstats.tablespaces' ? 'selected' : '')"><a href="javascript:void(0)" ng-click="setCurrentSection('pgstats.tablespaces')" i18n="pgstats.tablespaces"></a></li>
+								<li ng-class="(currentSection == 'pgstats.checkpoints' ? 'selected' : '')"><a href="javascript:void(0)" ng-click="
+								setCurrentSection('pgstats.checkpoints')"> <span i18n="pgstats.checkpoints"></span> <sup><i class="fa fa-star" style="color:yellow" title="Novidades!!!"></i></sup></a>
+								<li ng-class="(currentSection == 'pgstats.autovacuum' ? 'selected' : '')"><a href="javascript:void(0)" ng-click="
+								setCurrentSection('pgstats.autovacuum')"> <span i18n="pgstats.autovacuum"></span> <sup><i class="fa fa-star" style="color:yellow" title="Novidades!!!"></i></sup></a>
+								<li ng-class="(currentSection == 'pgstats.archivedlog' ? 'selected' : '')"><a href="javascript:void(0)" ng-click="setCurrentSection('pgstats.archivedlog')"> <span i18n="pgstats.archivedlog"></span> <sup><i class="fa fa-star" style="color:yellow" title="Novidades!!!"></i></sup></a>
+								<li ng-class="(currentSection == 'pgstats.conflicts' ? 'selected' : '')"><a href="javascript:void(0)" ng-click="setCurrentSection('pgstats.conflicts')"> <span i18n="pgstats.conflicts"></span> <sup><i class="fa fa-star" style="color:yellow" title="Novidades!!!"></i></sup></a>
+								<li ng-class="(currentSection == 'pgstats.replication' ? 'selected' : '')"><a href="javascript:void(0)" ng-click="setCurrentSection('pgstats.replication')"> <span i18n="pgstats.replication"></span> <sup><i class="fa fa-star" style="color:yellow" title="Novidades!!!"></i></sup></a>
+								<li ng-class="(currentSection == 'pgstats.user_functions' ? 'selected' : '')"><a href="javascript:void(0)" ng-click="setCurrentSection('pgstats.user_functions')"> <span i18n="pgstats.user_functions"></span> <sup><i class="fa fa-star" style="color:yellow" title="Novidades!!!"></i></sup></a>
+							</ul>
+						</li>
+						<li ng-class="(getCurrentSectionAtLevel(0) == 'sostats' ? 'current' : '')" class="sostats">
+							<a href="javascript:void(0)" ng-click="setCurrentSection('sostats.cpu')" i18n="sostats"></a>
+							<ul>
+								<li ng-class="(currentSection == 'sostats.cpu' ? 'selected' : '')"><a href="javascript:void(0)" ng-click="setCurrentSection('sostats.cpu')" i18n="sostats.cpu"></a></li>
+								<li ng-class="(currentSection == 'sostats.disk' ? 'selected' : '')"><a href="javascript:void(0)" ng-click="setCurrentSection('sostats.disk')" i18n="sostats.disk"></a></li>
+								<li ng-class="(currentSection == 'sostats.memory' ? 'selected' : '')"><a href="javascript:void(0)" ng-click="setCurrentSection('sostats.memory')" i18n="sostats.memory"></a></li>
+							</ul>
+						</li>
+						<li ng-class="(currentSection == 'sql' ? 'selected' : '')" class="sql">
+						<a href="javascript:void(0)" ng-click="setCurrentSection('sql')"><span i18n="sql"></span> <sup><i class="fa fa-star" style="color:yellow" title="Novidades!!!"></i></sup></a>
+						</li>
+						<li ng-class="(currentSection == 'pglog' ? 'selected' : '')" class="pglog">
+							<a href="javascript:void(0)" ng-click="setCurrentSection('pglog')" i18n="pglog"></a>
+						</li>
+						<li ng-class="(getCurrentSectionAtLevel(0) == 'backups' ? 'selected' : '')" class="backups">
+							<a href="javascript:void(0)" ng-click="setCurrentSection('backups.pgdump')" i18n="backups"></a>
+						</li>
+						<li ng-class="(getCurrentSectionAtLevel(0) == 'diagnostics' ? 'current' : '')" class="diagnostics">
+							<a href="javascript:void(0)" ng-class="(getCurrentSectionAtLevel(0) == 'diagnostics' ? 'selected' : '')" ng-click="setCurrentSection('diagnostics')" i18n="diagnostics"></a>
+						</li>
+					</ul>
+				</div>
+
+
+				<div id="logout">
+					<a href="/pga/s/auth/logout" class="btn-lg" i18n="logout"></a>
+				</div>
+			</nav> <!-- .menu -->
+
+			<div id="wrapper">
+				<div class="area-periodo">
+					<div id="periodo">
+						<a href="javascript:void(0)" ng-click="showDatepicker = !showDatepicker" class="toggle-datepicker"><span ng-class="'fa ' + (showDatepicker ? 'fa-minus-square-o' : 'fa-plus-square-o')"></span> Filtrar período de tempo</a>
+						<div class="datepicker-row" ng-show="showDatepicker">
+							<div class="datetime-from">
+								<label for="input-dateFrom" class="date-from">De</label>
+								<div class="datepicker">
+									<span class="input-group">
+										<input type="text" class="form-control period-picker" datepicker-popup="{{format}}" ng-model="dateFrom" is-open="showFrom" datepicker-options="dateOptions" ng-required="true" show-button-bar="false" min-date="minDateTime" max-date="maxDateTime" id="input-dateFrom" />
+
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-default" ng-click="openPicker($event, 'showFrom')">
+												<i class="fa fa-calendar"></i>
+											</button>
+										</span>
+									</span>
+								</div>
+
+								<div class="timepicker">
+									<timepicker ng-model="hourFrom" hour-step="hstep" minute-step="mstep" show-meridian="false"></timepicker>
+								</div>
+							</div>
+
+							<div class="datetime-to">
+								<label for="input-dateTo">até</label>
+
+								<div class="datepicker">
+									<span class="input-group">
+										<input type="text" class="form-control period-picker" datepicker-popup="{{format}}" ng-model="dateTo" is-open="showTo" datepicker-options="dateOptions" ng-required="true" show-button-bar="false" min-date="minDateTime" max-date="maxDateTime" id="input-dateTo" />
+
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-default" ng-click="openPicker($event, 'showTo')">
+												<i class="fa fa-calendar"></i>
+											</button>
+										</span>
+									</span>
+								</div>
+
+								<div class="timepicker">
+									<timepicker ng-model="hourTo" hour-step="hstep" minute-step="mstep" show-meridian="false"></timepicker>
+								</div>
+							</div>
+
+							<div class="hotkeys">
+								<div class="btn-group" role="group" aria-label="...">
+									<button type="button" class="btn btn-default time-move-back" ng-click="timeMoveBack()" title="Mover para 1 hora antes">1h</button>
+									<button type="button" class="btn btn-default time-move-8h" ng-click="timeMoveRelativeToEnd(-8)" title="Mover para últimas 8 horas">8 horas</button>
+									<button type="button" class="btn btn-default time-move-1d" ng-click="timeMoveRelativeToEnd(-24)" title="Mover para último dia">1 dia</button>
+									<button type="button" class="btn btn-default time-move-1w" ng-click="timeMoveRelativeToEnd(-168)" title="Mover para última semana">1 semana</button>
+									<button type="button" class="btn btn-default time-move-forward" ng-click="timeMoveForward()" title="Mover para 1 hora depois">1h</button>
+								</div>
+							</div>
+
+						</div>
+					</div>
+					<div>
+						<div id="breadcrumb">
+							<ol>
+								<li ng-repeat="b in breadcrumb" ng-class="(b.is_last ? 'current' : '')">
+									<span ng-if="b.is_last" i18n="{{b.section}}" i18n-params="extraFilters"></span>
+									<a href="javascript:void(0)" ng-if="!b.is_last" ng-click="setCurrentSection(b.section)" i18n="{{b.section}}" i18n-params="extraFilters"></a>
+								</li>
+							</ol>
+						</div>
+					</div>
+
+					<div class="btn-group charts" role="group" id="select-charts-dropdown">
+						<button type="button" class="btn btn-default dropdown-toggle" ng-class="btnChartsHighlight" data-toggle="dropdown" aria-expanded="false">
+							<span class="widget-selector" ng-class="selectCharts01.type" i18n="{{selectCharts01.key}}"></span>
+							<span class="loading-component" ng-hide="charts"></span>
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" role="menu">
+							<li ng-repeat="p in charts" ng-class="($parent.selectCharts01 == p ? 'active' : '')"><a href="javascript:void(0)" ng-click="$parent.selectCharts01 = p;" class="widget-selector" ng-class="p.type" i18n="{{p.key}}"></a></li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="area-dados form-inline">
+
+					<div id="main-widget">
+
+						<!-- Grafico de linhas -->
+						<div id="lineGraph">
+							<div id="mainWidgetContainer">
+								<div>
+									<div
+										ng-show="mainNavigation.currStep > mainNavigation.LOADING_MAIN_WIDGET && !widgetError"
+										 ng-class="selectCharts01.type + '-' + selectCharts01.key"
+									>
+										<pga-width-resize-watcher callback="widgetApi.resize()"></pga-width-resize-watcher>
+										<pga-widget
+											widget="selectCharts01"
+											data="currentData"
+											i18n-object="i18n"
+											options="widgetOptions" api="widgetApi"
+										></pga-widget>
+									</div>
+								</div>
+								<div class="loading-main" ng-hide="mainNavigation.currStep > mainNavigation.LOADING_MAIN_WIDGET"></div>
+								<div class="error-main" ng-show="widgetError" i18n="widgetError" i18n-params="widgetError"></div>
+							</div>
+
+						</div>
+
+						<div class="widget-description" ng-show="i18n[selectCharts01.key].description">
+							<div class="widget-description-title">
+								<h3>Ajuda</h3>
+							</div>
+							<p>
+								<span i18n="{{selectCharts01.key}}" i18n-type="description" ng-show="i18n[selectCharts01.key].description"></span>
+								<span class="widget-description-more" ng-show="i18n[selectCharts01.key].has_help">
+									<button class="btn btn-link" data-toggle="modal" data-target="#widget-help-details-modal" i18n="more-details" ng-click="loadWidgetHelpDetails()"></button>
+								</span>
+							</p>
+						</div>
+
+					</div> <!-- #main-widget -->
+				</div> <!-- .area-dados -->
+			</div> <!-- #wrapper -->
+
+			<!-- Modal análise SQL -->
+			<div class="modal" id="analise-sql-modal" tabindex="-1" role="dialog" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h3 class="modal-title" i18n="sql"></h3>
+						</div>
+
+						<div class="modal-body">
+							<div id="query">
+
+								<div id="query-actions">
+									<strong>Copiar: </strong>
+										<a href="#" onclick="return selectQuery(this);" class="opt-sql">SQL</a>
+										<!-- | <a href="#" onclick="return selectQuery(this);" class="opt-explain">plano salvo</a> -->
+										| <a href="#" onclick="return selectQuery(this);" class="opt-explain">SQL para EXPLAIN</a>
+										| <a href="#" onclick="return selectQuery(this);" class="opt-explain-analyze">SQL para EXPLAIN ANALYZE</a>
+								</div>
+								<h4>Exemplo de execução:</h4>
+
+								<pre>
+								</pre>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-primary" data-dismiss="modal">OK</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		<!-- Modal de banco de dados -->
+		<div class="modal" id="database-modal" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title" i18n="select-server-instance-database"></h3>
+					</div>
+
+					<div class="modal-body">
+						<ul>
+							<li ng-show="customers && customers.length > 1">
+							<label i18n="customer"></label>
+							<select ng-model="selectCustomer01"
+									ng-options="p as p.name for p in customers"
+									required
+									class="form-control"
+									ng-show="mainNavigation.currStep > mainNavigation.LOADING_CUSTOMER">
+							</select>
+							<span class="loading-component" ng-hide="mainNavigation.currStep > mainNavigation.LOADING_CUSTOMER"></span>
+							</li>
+							<li>
+								<label i18n="server"></label>
+								<select ng-model="selectServer01"
+									ng-options="p as p.server_name for p in servers"
+									required
+									class="form-control"
+									ng-show="mainNavigation.currStep > mainNavigation.LOADING_SERVER">
+								</select>
+								<span class="loading-component" ng-hide="mainNavigation.currStep > mainNavigation.LOADING_SERVER"></span>
+							</li>
+						</ul>
+						<ul>
+							<li>
+								<label i18n="instance"></label>
+								<select ng-model="selectInstance01"
+									ng-options="p as p.instance_name for p in instances"
+									class="form-control"
+									ng-show="mainNavigation.currStep > mainNavigation.LOADING_INSTANCE">
+								</select>
+								<span class="loading-component" ng-hide="mainNavigation.currStep > mainNavigation.LOADING_INSTANCE"></span>
+							</li>
+						</ul>
+						<ul>
+							<li>
+								<label i18n="database"></label>
+								<select ng-model="selectDatabase01"
+									ng-options="p as p.database_name for p in databases"
+									class="form-control"
+									ng-show="mainNavigation.currStep > mainNavigation.LOADING_DATABASE">
+								</select>
+								<span class="loading-component" ng-hide="mainNavigation.currStep > mainNavigation.LOADING_DATABASE"></span>
+							</li>
+						</ul>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" data-dismiss="modal">OK</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal detalhes widget -->
+		<div class="modal" id="widget-help-details-modal" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title" i18n="{{selectCharts01.key}}" i18n-no-tooltip></h3>
+					</div>
+
+					<div class="modal-body">
+						<div class="loading-main" ng-hide="widgetHelpDetails"></div>
+						<p ng-show="widgetHelpDetails" ng-bind-html="widgetHelpDetails"></p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" data-dismiss="modal">OK</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal de feedback -->
+		<div class="modal" id="feedback-modal" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title" i18n="feedback.title">Feedback</h3>
+					</div>
+
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="text-feedback.name" i18n="feedback.name">Nome:</label>
+							<input id="text-feedback.name" class="form-control" name="name" autofocus type="text" />
+						</div>
+						<div class="form-group">
+							<label for="text-feedback.email" i18n="feedback.email">e-mail:</label>
+							<input id="text-feedback.email" class="form-control" name="email" autofocus type="email" />
+						</div>
+						<div class="form-group">
+							<label for="textarea-feedback.message" i18n="feedback.message">Mensagem:</label>
+							<textarea id="textarea-feedback.message" class="form-control" name="body" required rows="3"></textarea>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-default" data-dismiss="modal" i18n="feedback.cancel">Cancelar</button>
+						<button class="btn btn-primary" data-dismiss="modal" i18n="feedback.send">Enviar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<footer>
+			Copyright &copy; 2015 - <a href="http://www.pganalytics.com.br/" title="pgAnalytics">pgAnalytics</a>, por <a href="http://www.dextra.com.br/postgres" title="Dextra - Crafting Software Transforming Business">Dextra</a>
+		</footer>
+</body>
+
+    <!-- Sideshow -->
+	<script src="bower_components/sideshow/distr/dependencies/jazz.min.js"></script>
+	<script src="bower_components/sideshow/distr/dependencies/pagedown.min.js"></script>
+	<script src="bower_components/sideshow/distr/sideshow.js"></script>
+
+	<script src="js/tutorials/sideshow.config.js"></script>
+	<script src="js/tutorials/introduction.js"></script>
+	<script src="js/tutorials/presentation.js"></script>
+
+	<script src="js/menu-hidder.js"></script>
+
+	<script src="bower_components/rgbcolor/rgbcolor.js"></script>
+	<script src="bower_components/canvg/dist/canvg.js"></script>
+
+<!-- Configure and send Google Analytics pageview -->
+<script>
+	GA.sendPageView();
+</script>
+
+</html>
+
